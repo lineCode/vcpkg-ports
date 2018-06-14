@@ -1,0 +1,24 @@
+set(VCPKG_TARGET_ARCHITECTURE x64)
+set(VCPKG_CRT_LINKAGE static)
+set(VCPKG_LIBRARY_LINKAGE static)
+set(VCPKG_CMAKE_SYSTEM_NAME Linux)
+
+set(VCPKG_HOST x86_64-unknown-linux-gnu)
+set(VCPKG_CROSS /tools/toolchains/x86_64-unknown-linux-gnu/bin/${VCPKG_HOST}-)
+
+set(CMAKE_C_COMPILER ${VCPKG_CROSS}gcc)
+set(CMAKE_ASM_COMPILER ${VCPKG_CROSS}gcc CACHE FILEPATH "" FORCE)
+set(CMAKE_CXX_COMPILER ${VCPKG_CROSS}g++)
+set(CMAKE_RANLIB ${VCPKG_CROSS}ranlib CACHE FILEPATH "")
+set(CMAKE_STRIP ${VCPKG_CROSS}strip CACHE FILEPATH "")
+set(CMAKE_NM ${VCPKG_CROSS}gcc-nm CACHE FILEPATH "")
+set(CMAKE_AR ${VCPKG_CROSS}gcc-ar CACHE FILEPATH "")
+set(CMAKE_RANLIB ${VCPKG_CROSS}gcc-ranlib CACHE FILEPATH "")
+set(CMAKE_OBJDUMP ${VCPKG_CROSS}objdump CACHE FILEPATH "")
+
+set(LINKER_EXECUTABLE ld.gold CACHE FILEPATH "")
+set(VCPKG_LINKER_FLAGS "-static-libstdc++ -static-libgcc -fuse-ld=gold" CACHE STRING "")
+set(CMAKE_SYSROOT /tools/toolchains/x86_64-unknown-linux-gnu/x86_64-unknown-linux-gnu/sysroot)
+
+set(CMAKE_C_VISIBILITY_PRESET hidden)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
