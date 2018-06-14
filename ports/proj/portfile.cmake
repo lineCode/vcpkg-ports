@@ -12,21 +12,13 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-# vcpkg_apply_patches(
-#     SOURCE_PATH ${SOURCE_PATH}/
-#     PATCHES
-#     ${CMAKE_CURRENT_LIST_DIR}/0001-CMake-add-detection-of-recent-visual-studio-versions.patch
-#     ${CMAKE_CURRENT_LIST_DIR}/0002-CMake-fix-error-by-only-setting-properties-for-targe.patch
-#     ${CMAKE_CURRENT_LIST_DIR}/0003-CMake-configurable-cmake-config-install-location.patch
-# )
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     list(APPEND CMAKE_OPTIONS "-DBUILD_LIBPROJ_SHARED=YES")
 else()
     list(APPEND CMAKE_OPTIONS "-DBUILD_LIBPROJ_SHARED=NO")
 endif()
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     vcpkg_replace_string(${SOURCE_PATH}/src/lib_proj.cmake "if(WIN32)" "if(MSVC)")
     vcpkg_replace_string(${SOURCE_PATH}/cmake/ProjInstallPath.cmake "set(DEFAULT_LIB_SUBDIR local/lib)" "set(DEFAULT_LIB_SUBDIR lib)")
     vcpkg_replace_string(${SOURCE_PATH}/cmake/ProjInstallPath.cmake "set(DEFAULT_INCLUDE_SUBDIR local/include)" "set(DEFAULT_INCLUDE_SUBDIR include)")
