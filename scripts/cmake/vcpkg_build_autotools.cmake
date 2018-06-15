@@ -24,7 +24,7 @@
 ## "install" target
 ##
 function(vcpkg_build_autotools)
-    cmake_parse_arguments(_bc "DISABLE_PARALLEL;ADD_BIN_TO_PATH;IN_SOURCE" "TARGET;LOGFILE_ROOT" "" ${ARGN})
+    cmake_parse_arguments(_bc "DISABLE_PARALLEL;ADD_BIN_TO_PATH;IN_SOURCE" "PARALLEL_JOBS;TARGET;LOGFILE_ROOT" "" ${ARGN})
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -47,6 +47,8 @@ function(vcpkg_build_autotools)
 
     if(_bc_DISABLE_PARALLEL)
         set(PARALLEL_ARG ${NO_PARALLEL_ARG})
+    elseif (_bc_PARALLEL_JOBS)
+        set(PARALLEL_ARG "-j${_bc_PARALLEL_JOBS}")
     endif()
 
     foreach(BUILDTYPE "debug" "release")
