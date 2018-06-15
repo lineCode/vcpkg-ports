@@ -123,7 +123,7 @@ if (UNIX)
         )
 
     if(APPLE)
-        vcpkg_build_autotools(IN_SOURCE DISABLE_PARALLEL)
+        vcpkg_build_autotools(IN_SOURCE PARALLEL_JOBS 4)
     else()
         vcpkg_build_autotools(IN_SOURCE)
     endif()
