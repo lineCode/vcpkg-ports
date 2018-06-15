@@ -38,7 +38,29 @@ endforeach()
 find_program(NMAKE nmake REQUIRED)
 
 if (UNIX)
-    #--with-gif=${PREFIX_PATH}
+    if("geos" IN_LIST FEATURES)
+        list(APPEND AUTOCONF_OPTIONS --with-geos=yes)
+    else ()
+        list(APPEND AUTOCONF_OPTIONS --without-geos)
+    endif()
+
+    if("jpeg" IN_LIST FEATURES)
+        list(APPEND AUTOCONF_OPTIONS --with-jpeg=${PREFIX_PATH})
+    else ()
+        list(APPEND AUTOCONF_OPTIONS --without-jpeg)
+    endif()
+
+    if("gif" IN_LIST FEATURES)
+        list(APPEND AUTOCONF_OPTIONS --with-gif=${PREFIX_PATH})
+    else ()
+        list(APPEND AUTOCONF_OPTIONS --without-gif)
+    endif()
+
+    if("sqlite" IN_LIST FEATURES)
+        list(APPEND AUTOCONF_OPTIONS --with-sqlite3)
+    else ()
+        list(APPEND AUTOCONF_OPTIONS --without-sqlite3)
+    endif()
 
     get_cmake_property(_variableNames VARIABLES)
     list (SORT _variableNames)
@@ -47,6 +69,8 @@ if (UNIX)
         SOURCE_PATH_DEBUG ${SOURCE_PATH_DEBUG}
         SOURCE_PATH_RELEASE ${SOURCE_PATH_RELEASE}
         OPTIONS
+            ac_cv_header_lzma_h=yes
+            ac_cv_lib_lzma_lzma_code=yes
             --without-ld-shared
             --disable-shared
             --with-sysroot=${PREFIX_PATH}
@@ -61,7 +85,6 @@ if (UNIX)
             --with-geotiff=internal
             --with-liblzma=yes
             --with-libjson-c=internal
-            --with-geos=${PREFIX_PATH}/bin/geos-config
             --without-pg
             --without-grass
             --without-libgrass
@@ -96,12 +119,13 @@ if (UNIX)
             --without-php
             --without-python
             --without-webp
+            ${AUTOCONF_OPTIONS}
         )
 
     if(APPLE)
         vcpkg_build_autotools(IN_SOURCE DISABLE_PARALLEL)
     else()
-        vcpkg_build_autotools(IN_SOURCE DISABLE_PARALLEL)
+        vcpkg_build_autotools(IN_SOURCE)
     endif()
     vcpkg_install_autotools(IN_SOURCE)
 
@@ -258,6 +282,17 @@ if("jpeg" IN_LIST FEATURES)
     list(APPEND NMAKE_OPTIONS_DBG OPENJPEG_LIB=${OPENJPEG_LIBRARY_DBG})
     list(APPEND NMAKE_OPTIONS_REL OPENJPEG_LIB=${OPENJPEG_LIBRARY_REL})
 endif()
+
+# if("gif" IN_LIST FEATURES)
+#     list(APPEND NMAKE_OPTIONS
+#         OPENJPEG_ENABLED=YES
+#         OPENJPEG_CFLAGS=-I${OPENJPEG_INCLUDE_DIR}
+#         OPENJPEG_VERSION=20100
+#     )
+
+#     list(APPEND NMAKE_OPTIONS_DBG OPENJPEG_LIB=${OPENJPEG_LIBRARY_DBG})
+#     list(APPEND NMAKE_OPTIONS_REL OPENJPEG_LIB=${OPENJPEG_LIBRARY_REL})
+# endif()
 
 if("sqlite" IN_LIST FEATURES)
     list(APPEND NMAKE_OPTIONS SQLITE_INC=-I${SQLITE_INCLUDE_DIR})
