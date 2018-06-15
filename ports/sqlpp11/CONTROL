@@ -1,0 +1,4 @@
+Source: sqlpp11
+Version: 0.56
+Description: A type safe SQL template library for C++.
+Build-Depends: date

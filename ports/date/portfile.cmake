@@ -25,9 +25,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  string(REPLACE "ifdef DATE_BUILD_DLL" "if 1" _contents "${_contents}")
-endif()
-file(WRITE "${HEADER}" "${_contents}")
-
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/date RENAME copyright)
