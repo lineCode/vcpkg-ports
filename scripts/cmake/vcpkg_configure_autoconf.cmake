@@ -61,20 +61,20 @@ function(vcpkg_configure_autoconf)
         message(STATUS "### Windows toolchain ###")
         include(${VCPKG_ROOT_DIR}/scripts/toolchains/windows.cmake)
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-        message(STATUS "### Linux toolchain ###") 
+        message(STATUS "### Linux toolchain ###")
         include(${VCPKG_ROOT_DIR}/scripts/toolchains/linux.cmake)
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
-        message(STATUS "### Android toolchain ###") 
+        message(STATUS "### Android toolchain ###")
         include(${VCPKG_ROOT_DIR}/scripts/toolchains/android.cmake)
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-        message(STATUS "### OSX toolchain ###") 
+        message(STATUS "### OSX toolchain ###")
         include(${VCPKG_ROOT_DIR}/scripts/toolchains/osx.cmake)
     elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" AND (CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin"))
-        message(STATUS "### MinGW cross toolchain ###") 
+        message(STATUS "### MinGW cross toolchain ###")
         set(CMAKE_CROSSCOMPILING ON CACHE BOOL "")
         include(${VCPKG_ROOT_DIR}/scripts/toolchains/mingw-cross.cmake)
     else ()
-        message(STATUS "### NO toolchain ${VCPKG_CMAKE_SYSTEM_NAME} ${CMAKE_HOST_SYSTEM_NAME} ###") 
+        message(STATUS "### NO toolchain ${VCPKG_CMAKE_SYSTEM_NAME} ${CMAKE_HOST_SYSTEM_NAME} ###")
     endif()
 
     #foreach (_variableName ${_variableNames})
@@ -103,9 +103,6 @@ function(vcpkg_configure_autoconf)
     #     "-DCMAKE_INSTALL_LIBDIR:STRING=lib"
     #     "-DCMAKE_INSTALL_BINDIR:STRING=bin"
     # )
-
-    SET(CFLAGS)
-    SET(CXXFLAGS)
 
     if (CMAKE_C_FLAGS_INIT)
         set (_ac_CFLAGS ${CMAKE_C_FLAGS_INIT})
@@ -142,26 +139,26 @@ function(vcpkg_configure_autoconf)
     endif ()
 
     if (CMAKE_C_VISIBILITY_PRESET)
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=${CMAKE_C_VISIBILITY_PRESET}")
+        set(_ac_CFLAGS "${_ac_CFLAGS} -fvisibility=${CMAKE_C_VISIBILITY_PRESET}")
     endif ()
 
     if (CMAKE_CXX_VISIBILITY_PRESET)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=${CMAKE_CXX_VISIBILITY_PRESET}")
+        set(_ac_CXXFLAGS "${_ac_CXXFLAGS} -fvisibility=${CMAKE_CXX_VISIBILITY_PRESET}")
     endif ()
 
     if (CMAKE_VISIBILITY_INLINES_HIDDEN)
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility-inlines-hidden")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden")
+        set(_ac_CFLAGS "${_ac_CFLAGS} -fvisibility-inlines-hidden")
+        set(_ac_CXXFLAGS "${_ac_CXXFLAGS} -fvisibility-inlines-hidden")
     endif ()
 
     if (CMAKE_POSITION_INDEPENDENT_CODE)
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+        set(_ac_CFLAGS "${_ac_CFLAGS} -fPIC")
+        set(_ac_CXXFLAGS "${_ac_CXXFLAGS} -fPIC")
     endif ()
 
     if (CMAKE_SYSROOT)
-        set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} --sysroot=${CMAKE_SYSROOT})
-        set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} --sysroot=${CMAKE_SYSROOT})
+        set(_ac_CFLAGS ${_ac_CFLAGS} --sysroot=${CMAKE_SYSROOT})
+        set(_ac_CXXFLAGS ${_ac_CXXFLAGS} --sysroot=${CMAKE_SYSROOT})
     endif ()
 
     if (CMAKE_CROSSCOMPILING OR HOST MATCHES ".*-musl")
@@ -179,7 +176,7 @@ function(vcpkg_configure_autoconf)
     message(STATUS "Visibility C++: ${CMAKE_CXX_VISIBILITY_PRESET}")
 
     if (CMAKE_EXE_LINKER_FLAGS)
-        STRING(REPLACE ";" " " EXPORT_LDFLAGS "${CMAKE_EXE_LINKER_FLAGS}")
+        STRING(REPLACE ";" " " EXPORT_LDFLAGS "${CMAKE_EXE_LINKER_FLAGS} -L${CURRENT_INSTALLED_DIR}")
     endif ()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
@@ -200,6 +197,7 @@ function(vcpkg_configure_autoconf)
         STRING(REPLACE ";" " " EXPORT_CFLAGS "${_ac_CFLAGS_DEB}")
         STRING(REPLACE ";" " " EXPORT_CXXFLAGS "${_ac_CXXFLAGS_DEB}")
         set(EXPORT_CPPFLAGS "${EXPORT_CFLAGS}")
+        set(EXPORT_LDFLAGS "${EXPORT_LDFLAGS}")
         configure_file(${_csc_CURRENT_LIST_DIR}/runconfigure.sh.in ${WORKING_DIR}/runconfigure.sh)
 
         set(command
@@ -210,7 +208,7 @@ function(vcpkg_configure_autoconf)
             --enable-debug
             --prefix=${CURRENT_PACKAGES_DIR}/debug
         )
-        
+
         message(STATUS "Autoconf deb cmd ${command}")
 
         message(STATUS "Configuring ${TARGET_TRIPLET}-dbg in ${WORKING_DIR}")
@@ -218,7 +216,7 @@ function(vcpkg_configure_autoconf)
         message(STATUS "CXXFLAGS: ${EXPORT_CXXFLAGS}")
         message(STATUS "LDFLAGS: ${EXPORT_LDFLAGS}")
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        
+
         vcpkg_execute_required_process(
             COMMAND ${command}
             WORKING_DIRECTORY ${WORKING_DIR}
@@ -245,11 +243,12 @@ function(vcpkg_configure_autoconf)
         STRING(REPLACE ";" " " EXPORT_CFLAGS "${_ac_CFLAGS_REL}")
         STRING(REPLACE ";" " " EXPORT_CXXFLAGS "${_ac_CXXFLAGS_REL}")
         set(EXPORT_CPPFLAGS "${EXPORT_CFLAGS}")
+        set(EXPORT_LDFLAGS "${EXPORT_LDFLAGS}")
         configure_file(${_csc_CURRENT_LIST_DIR}/runconfigure.sh.in ${WORKING_DIR}/runconfigure.sh)
 
         set(command
             ${WORKING_DIR}/runconfigure.sh
-                ${HOST_ARG}    
+                ${HOST_ARG}
                 "${_csc_OPTIONS}"
                 "${_csc_OPTIONS_RELEASE}"
                 --prefix=${CURRENT_PACKAGES_DIR}
