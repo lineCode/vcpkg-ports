@@ -165,6 +165,14 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/toolchains/mingw-cross.cmake")
     endif()
 
+    if (CMAKE_C_COMPILER)
+        list(APPEND _csc_OPTIONS "-DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}")
+    endif ()
+
+    if (CMAKE_CXX_COMPILER)
+        list(APPEND _csc_OPTIONS "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}")
+    endif ()
+
     list(APPEND _csc_OPTIONS
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
         "-DVCPKG_PLATFORM_TOOLSET=${VCPKG_PLATFORM_TOOLSET}"
@@ -187,8 +195,6 @@ function(vcpkg_configure_cmake)
         "-DVCPKG_CROSS=${VCPKG_CROSS}"
         "-DCMAKE_INSTALL_LIBDIR:STRING=lib"
         "-DCMAKE_INSTALL_BINDIR:STRING=bin"
-        "-DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}"
-        "-DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}"
     )
 
     if(DEFINED ARCH)

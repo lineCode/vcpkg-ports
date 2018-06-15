@@ -19,5 +19,5 @@ Feature: sqlite
 Description: Sqlite support
 Build-Depends: sqlite3
 
-Feature: tools
+Feature: tool
 Description: Also include the gdal tools
