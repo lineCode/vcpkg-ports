@@ -146,7 +146,7 @@ file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/share/gdal/html" NATIVE_HTML_DIR)
 # Setup proj4 libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PROJ_INCLUDE_DIR)
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/proj_5_0.lib" PROJ_LIBRARY_REL)
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/proj_5_0d.lib" PROJ_LIBRARY_DBG)
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/proj_5_0_d.lib" PROJ_LIBRARY_DBG)
 
 # Setup libpng libraries + include path
 file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PNG_INCLUDE_DIR)
