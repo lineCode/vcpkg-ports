@@ -37,4 +37,7 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     else ()
         set(CMAKE_ASM_COMPILER clang)
     endif ()
+
+    set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+    set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 endif()
