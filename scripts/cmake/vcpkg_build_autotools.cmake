@@ -23,6 +23,10 @@
 ## You can use the alias [`vcpkg_install_autoconf()`](vcpkg_configure_autoconf.md) function if your automake script supports the
 ## "install" target
 ##
+
+include(ProcessorCount)
+ProcessorCount(NUM_CORES)
+
 function(vcpkg_build_autotools)
     cmake_parse_arguments(_bc "DISABLE_PARALLEL;ADD_BIN_TO_PATH;IN_SOURCE" "PARALLEL_JOBS;TARGET;LOGFILE_ROOT" "" ${ARGN})
 
@@ -30,7 +34,7 @@ function(vcpkg_build_autotools)
         set(_bc_LOGFILE_ROOT "build")
     endif()
 
-    set(PARALLEL_ARG "-j")
+    set(PARALLEL_ARG "-j${NUM_CORES}")
     set(NO_PARALLEL_ARG "-j1")
 
     if(_bc_TARGET)

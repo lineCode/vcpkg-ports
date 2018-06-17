@@ -23,8 +23,9 @@ else()
     set(PNG_SHARED_LIBS OFF)
 endif()
 
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     # finding the math library fails on some toolchains
+    # on apple libm is not presen on disk, so detection fails
     set(EXTRA_OPTIONS -DM_LIBRARY=m)
 endif ()
 

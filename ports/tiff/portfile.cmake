@@ -61,3 +61,4 @@ file(INSTALL
 )
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig_file(NAMES libtiff-4)

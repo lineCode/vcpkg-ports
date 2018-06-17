@@ -3,7 +3,6 @@ include(vcpkg_common_functions)
 set(VERSION_MAJOR 2)
 set(VERSION_MINOR 7)
 set(VERSION_REVISION 3)
-
 set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REVISION})
 set(PACKAGE_NAME ${PORT}-${VERSION}-Source)
 set(PACKAGE ${PACKAGE_NAME}.tar.gz)
@@ -64,6 +63,8 @@ if("tool" IN_LIST FEATURES)
 else ()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
+
+vcpkg_fixup_pkgconfig_file()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

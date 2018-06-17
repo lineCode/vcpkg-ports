@@ -3,7 +3,7 @@ set(VERSION_MAJOR 60)
 set(VERSION_MINOR 2)
 set(PACKAGE icu4c-${VERSION_MAJOR}_${VERSION_MINOR}-src.tgz)
 set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${PORT}-${VERSION}/${PORT})
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${PORT}-${VERSION})
 
 vcpkg_download_distfile(
 	ARCHIVE
@@ -15,7 +15,7 @@ vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_PATH})
 
 if (UNIX)
     vcpkg_configure_autoconf(
-        SOURCE_PATH ${SOURCE_PATH}/source
+        SOURCE_PATH ${SOURCE_PATH}/${PORT}/source
         OPTIONS
             --enable-static
             --disable-shared
@@ -26,12 +26,10 @@ if (UNIX)
             --with-data-packaging=static
     )
 
-    if (APPLE)
-        vcpkg_build_autotools(PARALLEL_JOBS 4)
-    else ()
-        vcpkg_build_autotools()
-    endif ()
+    vcpkg_build_autotools()
     vcpkg_install_autotools()
+
+    vcpkg_fixup_pkgconfig_file(NAMES icu-i18n icu-uc icu-io)
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
@@ -167,5 +165,5 @@ vcpkg_copy_pdbs()
 endif()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/icu)
+file(COPY ${SOURCE_PATH}/${PORT}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/icu)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/icu/LICENSE ${CURRENT_PACKAGES_DIR}/share/icu/copyright)

@@ -25,6 +25,11 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" OR
     vcpkg_replace_string(${SOURCE_PATH}/cmake/ProjInstallPath.cmake "set(DEFAULT_CMAKE_SUBDIR local/lib/cmake/" "set(DEFAULT_CMAKE_SUBDIR lib/cmake/")
 endif ()
 
+vcpkg_replace_string(${SOURCE_PATH}/src/lib_proj.cmake
+    "-DPROJ_LIB=\"\${CMAKE_INSTALL_PREFIX}/\${DATADIR}\""
+    "-DPROJ_LIB=\"\${VCPKG_INSTALL_PREFIX}/\${DATADIR}\""
+)
+
 # disable for emscripten
 set (THREAD_SUPPORT ON)
 
@@ -39,6 +44,7 @@ vcpkg_configure_cmake(
         -DBUILD_CCT=OFF
         -DBUILD_GIE=OFF
         -DUSE_THREAD=${THREAD_SUPPORT}
+        -DVCPKG_INSTALL_PREFIX=${CURRENT_INSTALLED_DIR}
     OPTIONS_DEBUG
         -DCMAKECONFIGDIR=${CURRENT_PACKAGES_DIR}/debug/share/${PORT}
     OPTIONS_RELEASE
