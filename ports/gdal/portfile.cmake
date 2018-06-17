@@ -125,10 +125,14 @@ if (UNIX)
     vcpkg_build_autotools(IN_SOURCE)
     vcpkg_install_autotools(IN_SOURCE)
 
+    buildtrees/gdal/src-x64-osx-debug/gdal-2.3.0/
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/bin/gdal-config "packages/${PORT}_${TARGET_TRIPLET}" "installed/${TARGET_TRIPLET}")
+
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/gdal-config ${CURRENT_PACKAGES_DIR}/tools/gdal-config)
     if("tool" IN_LIST FEATURES)
         file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools)
     else ()
