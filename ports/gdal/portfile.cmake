@@ -119,6 +119,7 @@ if (UNIX)
             --without-php
             --without-python
             --without-webp
+            --without-gnm
             ${AUTOCONF_OPTIONS}
         )
 
