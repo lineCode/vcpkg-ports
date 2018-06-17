@@ -122,11 +122,7 @@ if (UNIX)
             ${AUTOCONF_OPTIONS}
         )
 
-    if(APPLE)
-        vcpkg_build_autotools(IN_SOURCE PARALLEL_JOBS 4)
-    else()
-        vcpkg_build_autotools(IN_SOURCE)
-    endif()
+    vcpkg_build_autotools(IN_SOURCE)
     vcpkg_install_autotools(IN_SOURCE)
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -138,6 +134,8 @@ if (UNIX)
     else ()
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     endif()
+
+    vcpkg_fixup_pkgconfig_file()
 else ()
 file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
 file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/share/gdal" NATIVE_DATA_DIR)

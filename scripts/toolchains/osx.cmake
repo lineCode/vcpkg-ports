@@ -38,6 +38,7 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         set(CMAKE_ASM_COMPILER clang)
     endif ()
 
+    set(CMAKE_FIND_ROOT_PATH "/usr/local/opt/llvm;/System/Library/Frameworks" CACHE STRING "")
     set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
     set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 endif()

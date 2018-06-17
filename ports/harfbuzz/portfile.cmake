@@ -20,8 +20,10 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DHB_HAVE_FREETYPE=ON
+        -DHB_HAVE_ICU=ON
         -DHB_BUILD_UTILS=OFF
         -DHB_HAVE_GOBJECT=OFF
+        -DHB_HAVE_CORETEXT=OFF
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
