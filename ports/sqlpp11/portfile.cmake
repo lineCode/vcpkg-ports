@@ -34,6 +34,7 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/cmake/Sqlpp11 ${CURRENT_PACKAGES_D
 vcpkg_fixup_cmake_targets()
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/sqlpp11-ddl2cpp ${CURRENT_PACKAGES_DIR}/tools/sqlpp11-ddl2cpp)
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/${PORT}/Sqlpp11Config.cmake "../bin/sqlpp11-ddl2cpp" "tools/sqlpp11-ddl2cpp")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
