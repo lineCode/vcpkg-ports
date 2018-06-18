@@ -9,7 +9,7 @@ export CXXFLAGS="@EXPORT_CXXFLAGS@"
 
 # Linker
 export LD=@LINKER_EXECUTABLE@
-export LDLAGS="@EXPORT_LDFLAGS@"
+export LDFLAGS="@EXPORT_LDFLAGS@"
 
 # Tools
 export AR=@CMAKE_AR@
