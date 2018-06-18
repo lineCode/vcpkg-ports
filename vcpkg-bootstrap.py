@@ -4,7 +4,7 @@ import subprocess
 
 
 def run_vcpkg(ports, triplet):
-    args = ['vcpkg']
+    args = ['vcpkg', '--recurse']
     if triplet:
         args += ['--triplet', triplet]
 
