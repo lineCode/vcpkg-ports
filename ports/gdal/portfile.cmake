@@ -39,7 +39,7 @@ find_program(NMAKE nmake REQUIRED)
 
 if (UNIX)
     if("geos" IN_LIST FEATURES)
-        list(APPEND AUTOCONF_OPTIONS --with-geos=yes)
+        list(APPEND AUTOCONF_OPTIONS --with-geos=${PREFIX_PATH}/bin/geos-config)
     else ()
         list(APPEND AUTOCONF_OPTIONS --without-geos)
     endif()
@@ -126,7 +126,6 @@ if (UNIX)
     vcpkg_build_autotools(IN_SOURCE)
     vcpkg_install_autotools(IN_SOURCE)
 
-    #buildtrees/gdal/src-x64-osx-debug/gdal-2.3.0/
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/bin/gdal-config "packages/${PORT}_${TARGET_TRIPLET}" "installed/${TARGET_TRIPLET}")
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
