@@ -7,6 +7,7 @@ set(VERSION v${MAJOR}.${MINOR}.${REVISION})
 set(PACKAGE_NAME ${PORT}-${VERSION})
 set(PACKAGE ${PACKAGE_NAME}.tar.bz2)
 
+set(Python_ADDITIONAL_VERSIONS 2.7 3.5)
 find_package(PythonInterp REQUIRED)
 
 # Extract source into architecture specific directory, because GDALs' build currently does not
@@ -129,7 +130,7 @@ set(SCONS_OPTIONS_DBG
     HB_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib
     PROJ_LIBS=${CURRENT_INSTALLED_DIR}/lib
     PNG_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib
-    TIFF_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib    
+    TIFF_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib
 )
 
 message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
