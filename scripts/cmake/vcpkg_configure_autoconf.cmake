@@ -60,7 +60,7 @@ function(vcpkg_configure_autoconf)
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME)
         message(STATUS "### Windows toolchain ###")
         include(${VCPKG_ROOT_DIR}/scripts/toolchains/windows.cmake)
-    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" AND (CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")))
         message(STATUS "### Linux toolchain ###")
         include(${VCPKG_ROOT_DIR}/scripts/toolchains/linux.cmake)
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
@@ -69,10 +69,6 @@ function(vcpkg_configure_autoconf)
     elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         message(STATUS "### OSX toolchain ###")
         include(${VCPKG_ROOT_DIR}/scripts/toolchains/osx.cmake)
-    elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows" AND (CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin"))
-        message(STATUS "### MinGW cross toolchain ###")
-        set(CMAKE_CROSSCOMPILING ON CACHE BOOL "")
-        include(${VCPKG_ROOT_DIR}/scripts/toolchains/mingw-cross.cmake)
     else ()
         message(STATUS "### NO toolchain ${VCPKG_CMAKE_SYSTEM_NAME} ${CMAKE_HOST_SYSTEM_NAME} ###")
     endif()
@@ -166,6 +162,14 @@ function(vcpkg_configure_autoconf)
         set(HOST_ARG --host=${HOST})
     endif ()
 
+    if (${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
+        list(APPEND _csc_OPTIONS --disable-shared)
+        list(APPEND _csc_OPTIONS --enable-static)
+    else ()
+        list(APPEND _csc_OPTIONS --disable-static)
+        list(APPEND _csc_OPTIONS --enable-shared)
+    endif ()
+
     set (_ac_CFLAGS_REL ${_ac_CFLAGS} ${_ac_CFLAGS_RELEASE})
     set (_ac_CXXFLAGS_REL ${_ac_CXXFLAGS} ${_ac_CXXFLAGS_RELEASE})
     set (_ac_CFLAGS_DEB ${_ac_CFLAGS} ${_ac_CFLAGS_DEBUG})
@@ -206,6 +210,7 @@ function(vcpkg_configure_autoconf)
             "${_csc_OPTIONS}"
             "${_csc_OPTIONS_DEBUG}"
             --enable-debug
+            --disable-dependency-tracking
             --prefix=${CURRENT_PACKAGES_DIR}/debug
         )
 

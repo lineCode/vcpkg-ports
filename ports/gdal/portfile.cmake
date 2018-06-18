@@ -71,6 +71,7 @@ if (UNIX)
         OPTIONS
             ac_cv_header_lzma_h=yes
             ac_cv_lib_lzma_lzma_code=yes
+            am_cv_func_iconv=no
             --without-ld-shared
             --disable-shared
             --with-sysroot=${PREFIX_PATH}
@@ -133,6 +134,7 @@ if (UNIX)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(MAKE_DIRECTORY ${CURRENT_INSTALLED_DIR}/tools)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/gdal-config ${CURRENT_INSTALLED_DIR}/tools/gdal-config)
     if("tool" IN_LIST FEATURES)
         file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools)

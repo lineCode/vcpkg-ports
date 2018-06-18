@@ -21,21 +21,39 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     endif()
 
     if (VCPKG_C_COMPILER)
-        set(CMAKE_C_COMPILER ${VCPKG_C_COMPILER})
-    else ()
-        set(CMAKE_C_COMPILER clang)
+        set(CMAKE_C_COMPILER "${VCPKG_C_COMPILER}" CACHE STRING "")
     endif ()
-    
+
+    if (VCPKG_ASM_COMPILER)
+        set(CMAKE_ASM_COMPILER "${VCPKG_ASM_COMPILER}" CACHE STRING "")
+    endif ()
+
     if (VCPKG_CXX_COMPILER)
-        set(CMAKE_CXX_COMPILER ${VCPKG_CXX_COMPILER})
-    else ()
-        set(CMAKE_CXX_COMPILER clang++)
+        set(CMAKE_CXX_COMPILER "${VCPKG_CXX_COMPILER}" CACHE STRING "")
     endif ()
-    
-    if (VCPKG_ASM_COMPILER)    
-        set(VCPKG_ASM_COMPILER ${VCPKG_ASM_COMPILER})
-    else ()
-        set(CMAKE_ASM_COMPILER clang)
+
+    if (VCPKG_Fortran_COMPILER)
+        set(CMAKE_Fortran_COMPILER "${VCPKG_Fortran_COMPILER}" CACHE STRING "")
+    endif ()
+
+    if (VCPKG_RANLIB)
+        set(CMAKE_RANLIB "${VCPKG_RANLIB}" CACHE STRING "")
+    endif ()
+
+    if (VCPKG_STRIP)
+        set(CMAKE_STRIP "${VCPKG_STRIP}" CACHE STRING "")
+    endif ()
+
+    if (VCPKG_AR)
+        set(CMAKE_AR "${VCPKG_AR}" CACHE STRING "")
+    endif ()
+
+    if (VCPKG_OBJDUMP)
+        set(CMAKE_OBJDUMP "${VCPKG_OBJDUMP}" CACHE STRING "")
+    endif ()
+
+    if (VCPKG_SYSROOT)
+        set(CMAKE_SYSROOT "${VCPKG_SYSROOT}")
     endif ()
 
     set(CMAKE_FIND_ROOT_PATH "/usr/local/opt/llvm;/System/Library/Frameworks" CACHE STRING "")
