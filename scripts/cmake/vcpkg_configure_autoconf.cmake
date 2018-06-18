@@ -206,9 +206,9 @@ function(vcpkg_configure_autoconf)
 
         set(command
             ${WORKING_DIR}/runconfigure.sh
-            ${HOST_ARG}
             "${_csc_OPTIONS}"
             "${_csc_OPTIONS_DEBUG}"
+            ${HOST_ARG}
             --enable-debug
             --disable-dependency-tracking
             --prefix=${CURRENT_PACKAGES_DIR}/debug
