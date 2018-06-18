@@ -2,6 +2,7 @@
 # C compiler
 export CC=@CMAKE_C_COMPILER@
 export CFLAGS="@EXPORT_CFLAGS@"
+export CPPFLAGS="@EXPORT_CFLAGS@"
 
 # C++ compiler
 export CXX=@CMAKE_CXX_COMPILER@

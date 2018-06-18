@@ -73,7 +73,6 @@ if (UNIX)
             ac_cv_lib_lzma_lzma_code=yes
             am_cv_func_iconv=no
             --without-ld-shared
-            --disable-shared
             --with-sysroot=${PREFIX_PATH}
             --with-threads
             --with-cpp14
