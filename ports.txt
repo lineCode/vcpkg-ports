@@ -9,7 +9,6 @@ libressl
 benchmark
 gtest
 date
-eccodes
 eigen3
 expat
 fmt
@@ -21,7 +20,7 @@ netcdf-c
 http-parser
 pugixml
 pybind11
-restinio
+restinio[boost]
 sqlite3
 sqlpp11
 sqlpp11-connector-sqlite3

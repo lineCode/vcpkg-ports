@@ -21,6 +21,6 @@ hdf5[cpp]
 netcdf-c
 http-parser
 pugixml
-restinio
+restinio[boost]
 sqlite3
 sqlpp11

@@ -7,6 +7,10 @@
 #  vcpkg_fixup_pkgconfig_file()
 #
 function(vcpkg_fixup_pkgconfig_file)
+    if (NOT UNIX)
+        return()
+    endif ()
+
     cmake_parse_arguments(_vfpf "" "" "NAMES" ${ARGN})
 
     if(_vfpf_UNPARSED_ARGUMENTS)

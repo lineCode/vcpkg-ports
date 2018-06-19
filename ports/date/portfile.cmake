@@ -8,6 +8,10 @@ vcpkg_from_github(
   HEAD_REF master
 )
 
+# make sure we can override the cmake config dir variable
+vcpkg_replace_string(${SOURCE_PATH}/CMakeLists.txt "set(DEF_INSTALL_CMAKE_DIR CMake)" "set(DEF_INSTALL_CMAKE_DIR CMake CACHE FILEPATH \"\")")
+vcpkg_replace_string(${SOURCE_PATH}/CMakeLists.txt "set(DEF_INSTALL_CMAKE_DIR \${CMAKE_INSTALL_LIBDIR}/cmake/date)" "set(DEF_INSTALL_CMAKE_DIR \${CMAKE_INSTALL_LIBDIR}/cmake/date CACHE FILEPATH \"\")")
+
 set(USE_TZ_DB ON)
 if("remote-api" IN_LIST FEATURES)
   set(USE_TZ_DB OFF)
@@ -16,11 +20,17 @@ endif()
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
-  OPTIONS -DUSE_SYSTEM_TZ_DB=${USE_TZ_DB} -DENABLE_DATE_TESTING=OFF
+  OPTIONS
+    -DUSE_SYSTEM_TZ_DB=${USE_TZ_DB}
+    -DENABLE_DATE_TESTING=OFF
+  OPTIONS_DEBUG
+    -DDEF_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/debug/share/date
+  OPTIONS_RELEASE
+    -DDEF_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/date
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/date TARGET_PATH share/date)
+vcpkg_fixup_cmake_targets()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
