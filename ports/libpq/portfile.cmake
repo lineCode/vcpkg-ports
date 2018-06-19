@@ -9,11 +9,18 @@ vcpkg_extract_source_archive(${ARCHIVE})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+if ("ssl" IN_LIST FEATURES)
+    set(SSL_OPT ON)
+else ()
+    set(SSL_OPT ON)
+endif ()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         "-DPORT_DIR=${CMAKE_CURRENT_LIST_DIR}"
+        -DENABLE_SSL=${SSL_OPT}
     OPTIONS_DEBUG
         -DINSTALL_INCLUDES=OFF
 )
