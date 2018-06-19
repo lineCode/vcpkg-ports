@@ -21,7 +21,7 @@ freetype
 gdal[tool,geos]
 gsl
 harfbuzz
-hdf5
+hdf5[cpp]
 netcdf-c
 http-parser
 pugixml
@@ -30,3 +30,5 @@ restinio
 sqlite3
 sqlpp11
 mapnik[gdal]
+sqlpp11-connector-sqlite3
+sqlpp11-connector-postgresql

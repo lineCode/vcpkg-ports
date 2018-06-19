@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import subprocess
+import sys
 
 
 def run_vcpkg(ports, triplet):
@@ -29,8 +30,9 @@ def main():
 
     try:
         run_vcpkg(ports_to_install, args.triplet)
+        sys.exit(0)
     except subprocess.CalledProcessError as e:
-        print(str(e))
+        sys.exit(e.returncode)
 
 
 if __name__ == "__main__":
