@@ -1,7 +1,7 @@
 Source: gdal
 Version: 2.3.0-1
 Description: The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data.
-Build-Depends: proj, libpng, expat, tiff[lzw], liblzma
+Build-Depends: proj4, libpng, expat, tiff[lzw], liblzma
 
 Feature: geos
 Description: Geometry Engine support

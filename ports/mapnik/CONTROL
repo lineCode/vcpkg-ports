@@ -1,7 +1,7 @@
 Source: mapnik
 Version: 3.0.20
 Description: Toolkit for developing mapping applications
-Build-Depends: zlib, boost-system, boost-filesystem, boost-regex, boost-program-options, boost-bimap, boost-assign, boost-gil, boost-geometry, boost-interprocess, boost-property-tree, boost-format, icu, freetype, harfbuzz, libpng, tiff, proj
+Build-Depends: zlib, boost-system, boost-filesystem, boost-regex, boost-program-options, boost-bimap, boost-assign, boost-gil, boost-geometry, boost-interprocess, boost-property-tree, boost-format, icu, freetype, harfbuzz, libpng, tiff, proj4
 
 Feature: gdal
 Description: Gdal input plugin support
