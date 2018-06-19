@@ -6,7 +6,7 @@ icu
 libiconv
 libjpeg-turbo
 libpng
-tiff
+tiff[lzw]
 libressl
 benchmark
 gtest
