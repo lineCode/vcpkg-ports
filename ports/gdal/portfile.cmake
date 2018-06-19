@@ -142,6 +142,58 @@ if (UNIX)
 
     vcpkg_fixup_pkgconfig_file()
 else ()
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    foreach(BUILD_TYPE debug release)    
+        if (BUILD_TYPE MATCHES debug)    
+            set(GDAL_SRC_ROOT ${SOURCE_PATH_DEBUG})
+        else ()
+            set(GDAL_SRC_ROOT ${SOURCE_PATH_RELEASE})
+        endif ()
+        
+        message(STATUS "Patching GDAL for configured link lib: " ${GDAL_SRC_ROOT})
+
+        file(READ ${GDAL_SRC_ROOT}/makefile.vc conf_file)
+        # don't install the dll
+        string(REPLACE "install: $(GDAL_DLL) plugin_dir apps_dir " "install: plugin_dir apps_dir " conf_file "${conf_file}")
+        # copy static lib instead of import lib during install
+        string(REPLACE "copy gdal_i.lib $(LIBDIR)" "copy $(GDALLIB) $(LIBDIR)" conf_file "${conf_file}")
+        file(WRITE ${GDAL_SRC_ROOT}/makefile.vc "${conf_file}")
+
+        file(READ ${GDAL_SRC_ROOT}/apps/makefile.vc conf_file)
+        string(REPLACE "LIBS	=	$(GDALLIB)" "LIBS    =   $(GDALLIB) $(EXTERNAL_LIBS)" conf_file "${conf_file}")
+        file(WRITE ${GDAL_SRC_ROOT}/apps/makefile.vc "${conf_file}")
+
+        SET (MAKE_FILES
+            apps/makefile.vc
+            frmts/grib/makefile.vc
+            frmts/mrsid/makefile.vc
+            frmts/mrsid_lidar/makefile.vc
+            frmts/sde/makefile.vc
+            ogr/ogrsf_frmts/amigocloud/makefile.vc
+            ogr/ogrsf_frmts/arcobjects/makefile.vc
+            ogr/ogrsf_frmts/dwg/makefile.vc
+            ogr/ogrsf_frmts/filegdb/makefile.vc
+            ogr/ogrsf_frmts/libkml/makefile.vc
+            ogr/ogrsf_frmts/mongodb/makefile.vc
+            ogr/ogrsf_frmts/oci/makefile.vc
+        )
+
+        foreach(make_file IN LISTS MAKE_FILES)
+            file(READ ${GDAL_SRC_ROOT}/${make_file} conf_file)
+            # link applications against static lib and extenal libs instead of import lib
+            string(REPLACE "$(GDAL_ROOT)\\gdal_i.lib" "$(GDALLIB) $(EXTERNAL_LIBS)" conf_file "${conf_file}")
+            string(REPLACE "$(GDAL_ROOT)/gdal_i.lib" "$(GDALLIB) $(EXTERNAL_LIBS)" conf_file "${conf_file}")
+            file(WRITE ${GDAL_SRC_ROOT}/${make_file} ${conf_file})
+        endforeach()
+    endforeach()
+endif ()
+
+# we cannot disable the DLLBUILD by setting DLLBUILD=0 because then it is still considered defined
+# so don't specify a default DLLBUILD value and only set it to 1 for shared builds
+vcpkg_replace_string(${SOURCE_PATH_DEBUG}/nmake.opt "DLLBUILD=1" "#DLLBUILD=1")
+vcpkg_replace_string(${SOURCE_PATH_RELEASE}/nmake.opt "DLLBUILD=1" "#DLLBUILD=1")
+
 file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
 file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/share/gdal" NATIVE_DATA_DIR)
 file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/share/gdal/html" NATIVE_HTML_DIR)
@@ -216,6 +268,7 @@ set(NMAKE_OPTIONS
     DATADIR=${NATIVE_DATA_DIR}
     HTMLDIR=${NATIVE_HTML_DIR}
     PROJ_INCLUDE=-I${PROJ_INCLUDE_DIR}
+    "PROJ_FLAGS=-DPROJ_STATIC -DPROJ_VERSION=5"
     EXPAT_DIR=${EXPAT_INCLUDE_DIR}
     EXPAT_INCLUDE=-I${EXPAT_INCLUDE_DIR}
     #CURL_INC=-I${CURL_INCLUDE_DIR}
@@ -226,26 +279,29 @@ set(NMAKE_OPTIONS
     #LIBXML2_INC=-I${XML2_INCLUDE_DIR}
     PNG_EXTERNAL_LIB=1
     PNGDIR=${PNG_INCLUDE_DIR}
-    MSVC_VER=1900
+    INCLUDE_GNM_FRMTS=YES
+    BSB_SUPPORTED=NO
+    ODBC_SUPPORTED=0
+    JPEG_SUPPORTED=0
+    JPEG12_SUPPORTED=0
+    TIFF_OPTS=-DBIGTIFF_SUPPORT 
+    MSVC_VER=1910
     ZLIB_EXTERNAL_LIB=1
     ZLIB_INC=-I${ZLIB_INCLUDE_DIR}
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    list(APPEND NMAKE_OPTIONS WIN64=YES)
-endif()
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    list(APPEND NMAKE_OPTIONS PROJ_FLAGS=-DPROJ_STATIC)
-else()
-    # Enables PDBs for release and debug builds
-    list(APPEND NMAKE_OPTIONS WITH_PDB=1)
+    list(APPEND NMAKE_OPTIONS WIN64=1)
 endif()
 
 if (VCPKG_CRT_LINKAGE STREQUAL static)
     set(LINKAGE_FLAGS "/MT")
 else()
     set(LINKAGE_FLAGS "/MD")
+endif()
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    list(APPEND NMAKE_OPTIONS DLLBUILD=1)
 endif()
 
 set(NMAKE_OPTIONS_REL
@@ -275,6 +331,7 @@ set(NMAKE_OPTIONS_DBG
     #LIBXML2_LIB=${XML2_LIBRARY_DBG}
     ZLIB_LIB=${ZLIB_LIBRARY_DBG}
     DEBUG=1
+    WITH_PDB=1
 )
 
 if("geos" IN_LIST FEATURES)
