@@ -6,7 +6,7 @@ icu
 libiconv
 libjpeg-turbo
 libpng
-tiff
+tiff[lzw]
 libressl
 benchmark
 gtest
@@ -17,14 +17,11 @@ eigen3
 expat
 fmt
 spdlog
-freetype
 gdal[tool,geos]
 gsl
-harfbuzz
-hdf5
+hdf5[cpp]
 netcdf-c
 http-parser
 pugixml
 restinio
 sqlite3
-mapnik[gdal]
